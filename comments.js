@@ -42,6 +42,13 @@
   }
 
   /**
+   * Updates the displayed comments according to which checkboxes are
+   * currently selected in the comments controls.
+   */
+  function updateDisplayedComments() {
+  }
+
+  /**
    * Builds the sidebar widget for showing/hiding various comments.
    */
   function buildCommentsControls() {
@@ -54,11 +61,20 @@
       '</div>'
     );
 
-    $( "#github-comments-controls" ).on("change", "input", function( event ) {
-        console.log('change event detected');
-        console.log( $( this ).val() );
-    });
+    $("#github-comments-controls").on("change", "input", updateDisplayedComments);
   }
 
-  buildCommentsControls();
+  /**
+   * Injects the comments controls when the sidebar appears.
+   */
+  function onDomChange() {
+    var controlsPresent = $('#github-comments-controls').length != 0;
+    var sidebarPresent = $('.discussion-sidebar-item:last-child').length != 0;
+
+    if (!controlsPresent && sidebarPresent) {
+      buildCommentsControls();
+    }
+  }
+
+  $('body').bind('DOMSubtreeModified', onDomChange);
 })();
